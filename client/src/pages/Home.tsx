@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { useData } from "@/contexts/DataContext";
 import InfoTip from "@/components/InfoTip";
+import PartsSection from "@/components/PartsSection";
 
 const ORANGE = "#E87722";
 const NAVY = "#1A1A2E";
@@ -457,6 +458,41 @@ export default function Home() {
             ))}
           </div>
         </div>
+      </div>
+
+      {/* ── Parts Dataset Section ── */}
+      <div className="pt-4" style={{ borderTop: "1px solid #E8E9EC", marginTop: 12 }}>
+        <div className="mb-5 flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h2
+              className="text-xl font-bold"
+              style={{ fontFamily: "Sora, sans-serif", color: NAVY }}
+            >
+              Parts Dataset
+            </h2>
+            <p
+              className="text-sm mt-1"
+              style={{ color: "#6B7280", fontFamily: "DM Sans, sans-serif" }}
+            >
+              48 089 parts from the AArete delivery · top 12 000 enriched with
+              online-price benchmarks and BD notes
+            </p>
+          </div>
+          <span
+            className="chip text-xs"
+            style={{
+              background: "rgba(232,119,34,0.1)",
+              color: ORANGE,
+              border: "1px solid rgba(232,119,34,0.2)",
+              fontFamily: "DM Sans, sans-serif",
+              padding: "4px 10px",
+              borderRadius: 999,
+            }}
+          >
+            For Business Development
+          </span>
+        </div>
+        <PartsSection />
       </div>
     </div>
   );

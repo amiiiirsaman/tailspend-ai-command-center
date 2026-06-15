@@ -5,6 +5,8 @@ import { Switch, Route, useLocation } from "wouter";
 import { useEffect } from "react";
 import { DataProvider, useData } from "@/contexts/DataContext";
 import { FlagProvider } from "@/contexts/FlagContext";
+import { PartFlagProvider } from "@/contexts/PartFlagContext";
+import { PartsProvider } from "@/hooks/useParts";
 import Layout from "@/components/Layout";
 import Upload from "@/pages/Upload";
 import Home from "@/pages/Home";
@@ -13,20 +15,24 @@ import Categories from "@/pages/Categories";
 import Levers from "@/pages/Levers";
 import Waves from "@/pages/Waves";
 import FlaggedSuppliers from "@/pages/FlaggedSuppliers";
+import Parts from "@/pages/Parts";
 import AIChatDrawer from "@/components/AIChatDrawer";
 
-// Guard: redirect to /upload if no data is loaded
+// Guard: redirect to /upload if no data is loaded.
+// /parts is exempt — it has its own data source (bundled JSON or uploaded parts file).
 function DashboardGuard({ children }: { children: React.ReactNode }) {
   const { data } = useData();
   const [location, navigate] = useLocation();
 
+  const isPartsOnlyRoute = location === "/parts" || location.startsWith("/parts/");
+
   useEffect(() => {
-    if (!data && location !== "/upload") {
+    if (!data && !isPartsOnlyRoute && location !== "/upload") {
       navigate("/upload");
     }
-  }, [data, location, navigate]);
+  }, [data, location, navigate, isPartsOnlyRoute]);
 
-  if (!data) return null;
+  if (!data && !isPartsOnlyRoute) return null;
   return <>{children}</>;
 }
 
@@ -44,6 +50,8 @@ function AppRoutes() {
               <Route path="/levers" component={Levers} />
               <Route path="/waves" component={Waves} />
               <Route path="/flagged" component={FlaggedSuppliers} />
+              <Route path="/parts/:tab*" component={Parts} />
+              <Route path="/parts" component={Parts} />
               <Route component={Home} />
             </Switch>
             <AIChatDrawer />
@@ -57,9 +65,13 @@ function AppRoutes() {
 export default function App() {
   return (
     <DataProvider>
-      <FlagProvider>
-        <AppRoutes />
-      </FlagProvider>
+      <PartsProvider>
+        <FlagProvider>
+          <PartFlagProvider>
+            <AppRoutes />
+          </PartFlagProvider>
+        </FlagProvider>
+      </PartsProvider>
     </DataProvider>
   );
 }

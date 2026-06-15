@@ -15,18 +15,29 @@ import {
   Upload,
   FileSpreadsheet,
   Flag,
+  BarChart3,
+  Star,
+  List,
 } from "lucide-react";
 import { useState } from "react";
 import { useData } from "@/contexts/DataContext";
 import { useFlags } from "@/contexts/FlagContext";
+import { usePartFlags } from "@/contexts/PartFlagContext";
 
-const navItems = [
+const tailspendNav = [
   { href: "/", label: "Overview", icon: LayoutDashboard },
   { href: "/suppliers", label: "Suppliers", icon: Users },
   { href: "/categories", label: "Categories", icon: FolderTree },
   { href: "/levers", label: "Savings Levers", icon: Zap },
   { href: "/waves", label: "Waves & Progress", icon: Waves },
   { href: "/flagged", label: "Flagged Suppliers", icon: Flag },
+];
+
+const partsNav = [
+  { href: "/parts/insights", label: "Insights", icon: BarChart3 },
+  { href: "/parts/top", label: "Top 12K Parts", icon: Star, note: "95.5% spend" },
+  { href: "/parts/all", label: "All Parts", icon: List, note: "48K" },
+  { href: "/parts/flagged", label: "Flagged Parts", icon: Flag },
 ];
 
 const ORANGE = "#E87722";
@@ -36,6 +47,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const [location, navigate] = useLocation();
   const { data } = useData();
   const { flagCount } = useFlags();
+  const { flagCount: partFlagCount } = usePartFlags();
   const [searchOpen, setSearchOpen] = useState(false);
 
   const fileName = data?.summary.file_name ?? "";
@@ -86,27 +98,110 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
         {/* Nav */}
         <nav className="flex-1 overflow-y-auto px-3 py-2 space-y-0.5">
-          <div className="text-xs font-semibold px-2 py-1.5 mb-1" style={{ color: "#9CA3AF", letterSpacing: "0.06em", fontFamily: "DM Sans, sans-serif" }}>
-            ANALYTICS
+          {/* ── TailSpend Analytics ── */}
+          <div
+            className="text-xs font-semibold px-2 py-1.5 mb-1"
+            style={{
+              color: "#9CA3AF",
+              letterSpacing: "0.06em",
+              fontFamily: "DM Sans, sans-serif",
+            }}
+          >
+            TAILSPEND ANALYTICS
           </div>
-          {navItems.map(({ href, label, icon: Icon }) => {
-            const isActive = location === href || (href !== "/" && location.startsWith(href));
+          {tailspendNav.map(({ href, label, icon: Icon }) => {
+            const isActive =
+              location === href ||
+              (href !== "/" && (location === href || location.startsWith(href + "/")));
             return (
               <Link
                 key={href}
                 href={href}
                 className={`nav-item ${isActive ? "active" : ""}`}
-                style={{ fontFamily: "DM Sans, sans-serif", display: "flex", alignItems: "center", gap: "0.5rem", textDecoration: "none" }}
+                style={{
+                  fontFamily: "DM Sans, sans-serif",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.5rem",
+                  textDecoration: "none",
+                }}
               >
                 <Icon size={16} strokeWidth={isActive ? 2.2 : 1.8} />
                 <span className="flex-1">{label}</span>
                 {href === "/flagged" && flagCount > 0 && (
-                  <span className="ml-auto text-xs font-bold rounded-full px-1.5 py-0.5" style={{ background: "rgba(232,119,34,0.15)", color: "#E87722", fontFamily: "DM Mono, monospace", fontSize: 10 }}>
+                  <span
+                    className="ml-auto text-xs font-bold rounded-full px-1.5 py-0.5"
+                    style={{
+                      background: "rgba(232,119,34,0.15)",
+                      color: "#E87722",
+                      fontFamily: "DM Mono, monospace",
+                      fontSize: 10,
+                    }}
+                  >
                     {flagCount}
                   </span>
                 )}
                 {isActive && href !== "/flagged" && (
                   <ChevronRight size={12} className="ml-auto opacity-50" />
+                )}
+              </Link>
+            );
+          })}
+
+          {/* ── Parts Analytics ── */}
+          <div
+            className="text-xs font-semibold px-2 py-1.5 mt-4 mb-1"
+            style={{
+              color: "#9CA3AF",
+              letterSpacing: "0.06em",
+              fontFamily: "DM Sans, sans-serif",
+            }}
+          >
+            PARTS ANALYTICS
+          </div>
+          {partsNav.map(({ href, label, icon: Icon, note }) => {
+            const isActive =
+              location === href ||
+              (href === "/parts/insights" && location === "/parts");
+            return (
+              <Link
+                key={href}
+                href={href}
+                className={`nav-item ${isActive ? "active" : ""}`}
+                style={{
+                  fontFamily: "DM Sans, sans-serif",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.5rem",
+                  textDecoration: "none",
+                }}
+              >
+                <Icon size={16} strokeWidth={isActive ? 2.2 : 1.8} />
+                <span className="flex-1">{label}</span>
+                {note && (
+                  <span
+                    style={{
+                      fontSize: 10,
+                      color: isActive ? "#E87722" : "#9CA3AF",
+                      fontFamily: "DM Mono, monospace",
+                      fontWeight: 600,
+                    }}
+                  >
+                    {note}
+                  </span>
+                )}
+                {href === "/parts/flagged" && partFlagCount > 0 && (
+                  <span
+                    className="text-xs font-bold rounded-full px-1.5 py-0.5"
+                    style={{
+                      background: "rgba(232,119,34,0.15)",
+                      color: "#E87722",
+                      fontFamily: "DM Mono, monospace",
+                      fontSize: 10,
+                    }}
+                  >
+                    {partFlagCount}
+                  </span>
                 )}
               </Link>
             );
@@ -171,7 +266,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </span>
             <ChevronRight size={14} className="opacity-30" />
             <span className="text-sm font-semibold truncate" style={{ color: NAVY, fontFamily: "DM Sans, sans-serif" }}>
-              {navItems.find(n => n.href === location || (n.href !== "/" && location.startsWith(n.href)))?.label ?? "Overview"}
+              {[...tailspendNav, ...partsNav].find(n => n.href === location || (n.href !== "/" && (location === n.href || location.startsWith(n.href + "/"))))?.label ?? "Overview"}
             </span>
           </div>
 

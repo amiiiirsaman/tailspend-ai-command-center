@@ -9,7 +9,8 @@
     "start": "NODE_ENV=production node dist/index.js",
     "preview": "vite preview --host",
     "check": "tsc --noEmit",
-    "format": "prettier --write ."
+    "format": "prettier --write .",
+    "build:parts": "node scripts/build-parts-data.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-bedrock-runtime": "^3.1049.0",

@@ -111,3 +111,9 @@ temp/
 # Source data (do not commit customer Excel files)
 *.xlsx
 !.env.example
+
+# Source delivery files (customer data — never commit)
+*.csv
+
+# Local Copilot prompt config
+.github/prompts/
