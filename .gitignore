@@ -117,3 +117,6 @@ temp/
 
 # Local Copilot prompt config
 .github/prompts/
+
+# Handoff package — local only, do not commit
+parts-handoff/
