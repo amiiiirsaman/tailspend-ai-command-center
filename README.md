@@ -1,6 +1,6 @@
 # TailSpend AI — Command Center
 
-> Indirect-spend and aircraft-parts analytics for AArete consulting engagements.
+> Indirect-spend and aircraft-parts analytics for enterprise procurement programs.
 > Built for procurement leads, BD analysts, and sourcing teams.
 
 A single-page React dashboard that turns a raw supplier spend file plus the
@@ -39,7 +39,7 @@ and per-row drilldowns — all client-side, no backend required.
 - **wouter** for routing
 - **xlsx** for in-browser file parsing
 - **lucide-react** icons
-- Brand: AArete (ORANGE `#E87722` / NAVY `#1A1A2E`, Sora / DM Sans / DM Mono)
+- Brand: enterprise (ORANGE `#E87722` / NAVY `#1A1A2E`, Sora / DM Sans / DM Mono)
 
 ---
 
@@ -93,7 +93,7 @@ Path alias: `@/*` → `client/src/*` (configured in `tsconfig.json` and `vite.co
 ### Regenerating parts data
 
 Drop a fresh delivery file at the repo root following the
-`AArete_Combined_48k_DELIVERY_v<n>.{csv,xlsx}` naming convention, then:
+`enterprise_Combined_48k_DELIVERY_v<n>.{csv,xlsx}` naming convention, then:
 
 ```bash
 pnpm build:parts
